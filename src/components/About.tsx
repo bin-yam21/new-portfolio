@@ -2,115 +2,147 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import React, { useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import { Button } from "./ui/button";
+import { ArrowUpRight } from "lucide-react";
+
+import Reveal from "./Reveal";
+import SectionHeading from "./SectionHeading";
+import { site } from "@/lib/site";
+
+const focusAreas = [
+  {
+    title: "MERN & product engineering",
+    body: "MongoDB, Express, React, Node.js and Next.js — full-stack apps owned end to end, from the interface down to the data model.",
+  },
+  {
+    title: "Backend & systems",
+    body: "REST APIs, database design and the performance-critical paths — Go for concurrent services, Rust for systems-level work.",
+  },
+  {
+    title: "Developer tooling",
+    body: "Tools that take work off other engineers — schema visualisers, mock servers, editor extensions.",
+  },
+];
 
 const About = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
   return (
-    <div ref={ref} className="py-28 mt-10 px-4 sm:px-6 lg:px-4">
-      <div className="max-w-2xl grid items-center justify-start text-wrap mx-auto prose">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className=""
-        >
-          <div className="font-bold text-3xl text-black/90">About</div>
-          <p>
-            I&apos;m Adebanjo Stephen, a passionate 17-year-old self-taught
-            Nigerian software engineer and an aspiring AI & Machine Language
-            Expert with over 2yr +2 months of experience and a strong drive for
-            building impactful web experiences.
-          </p>
-          <p className="mt-2">
-            At 17, I’ve already built and shipped real-world AI products and I’m just getting started. I love solving
-            real problems through tech, learning fast, and creating beautiful,
-            high-performing user interfaces.
-          </p>
-          <p className="mt-2">
-            I’m currently working with{" "}
-            <Link
-              href="https://www.linkedin.com/company/externhq/posts/?feedView=all"
-              className="hover:text-green-900"
-            >
-              <strong>Extern</strong>
-            </Link>{" "}
-            on advanced full-stack projects, diving deeper into AI, and actively
-            preparing to land a role at a world-class company like{" "}
-            <strong>Google</strong>. I’m also open to freelance and
-            collaboration opportunities.
-          </p>
-          <p className="mt-2">
-            I’m also actively building my presence in the tech community. With
-            over <strong>200+ followers on X, </strong>
-            I’ve learned and connected with top minds, mentors in the indie
-            hacker and maker space — including people like{" "}
-            <Link href="https://x.com/marc_louvion">
-              <strong>@Marc Lou,</strong>
-            </Link>{" "}
-            <Link href="https://x.com/johnrushx">
-              <strong>@johnrushx,</strong>
-            </Link>{" "}
-            <Link href="https://x.com/tdinh_me">
-              <strong>@tdinh_me,</strong>
-            </Link>{" "}
-            and{" "}
-            <Link href="https://x.com/levelsio">
-              <strong>@levelsio.</strong>
-            </Link>{" "}
-            Their guidance and content have helped shape how I think about
-            product-building, growth, and shipping fast.
-          </p>
-        </motion.div>
+    <section id="about" className="scroll-mt-28 py-24 sm:py-32">
+      <div className="shell">
+        <SectionHeading
+          eyebrow="01 — About"
+          title={
+            <>
+              I build the whole thing —{" "}
+              <span className="text-muted-foreground">
+                interface, service and everything between.
+              </span>
+            </>
+          }
+        />
+
+        <div className="mt-14 grid gap-12 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-16">
+          {/* ---- Narrative ---- */}
+          <Reveal as="group" className="space-y-5 text-[1.0625rem] leading-relaxed text-muted-foreground">
+            <Reveal>
+              <p>
+                I&apos;m {site.name}, a MERN-stack and full-stack engineer and a
+                2026 Software Engineering graduate of Bahir Dar University. I
+                like the unglamorous parts: the data model that holds up under
+                real load, the error state nobody thought about, the build that
+                stays under a minute a year from now.
+              </p>
+            </Reveal>
+            <Reveal>
+              <p>
+                Most of my work starts at the interface and follows the request
+                all the way down. I reach for React, TypeScript and Next.js on
+                the front, Node.js and a boring Postgres or MongoDB schema
+                behind it, and Docker to ship the whole thing.
+              </p>
+            </Reveal>
+            <Reveal>
+              <p>
+                When a service needs raw performance I reach past Node — Go for
+                concurrent backend services, and Rust for systems-level work
+                like a WebSocket chat server or an HTTP server built straight on
+                TCP sockets. I&apos;m a self-directed learner who picks up new
+                tech by building something real with it.
+              </p>
+            </Reveal>
+            <Reveal>
+              <p className="text-foreground">
+                If you&apos;re weighing a build and want someone who&apos;ll
+                sweat the architecture as much as the pixels — let&apos;s talk.
+              </p>
+            </Reveal>
+
+            <Reveal>
+              <div className="flex flex-wrap gap-3 pt-3">
+                <Link
+                  href="#contact"
+                  className="group inline-flex items-center gap-1.5 text-sm font-medium text-foreground underline-offset-4 hover:text-accent hover:underline"
+                >
+                  Start a conversation
+                  <ArrowUpRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </Link>
+                <span aria-hidden className="text-border-strong">
+                  /
+                </span>
+                <a
+                  href={site.socials.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground underline-offset-4 hover:text-accent hover:underline"
+                >
+                  LinkedIn
+                  <ArrowUpRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </a>
+              </div>
+            </Reveal>
+          </Reveal>
+
+          {/* ---- Portrait card + focus areas ---- */}
+          <div className="space-y-8">
+            <Reveal delay={0.1}>
+              <a
+                href={site.socials.linkedin}
+                target="_blank"
+                rel="noreferrer"
+                className="group block overflow-hidden rounded-2xl border border-border bg-card p-2.5 shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
+              >
+                <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-muted">
+                  <Image
+                    src="/img/profile-pic.jpg"
+                    alt={`${site.name} portrait`}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 380px"
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
+                </div>
+                <div className="flex items-center justify-between px-2 py-3">
+                  <span className="font-mono text-xs tracking-tight text-muted-foreground">
+                    {site.handle}
+                  </span>
+                  <ArrowUpRight className="size-4 text-subtle-foreground transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent" />
+                </div>
+              </a>
+            </Reveal>
+
+            <Reveal as="group" gap={0.07} className="space-y-4">
+              {focusAreas.map((area) => (
+                <Reveal key={area.title}>
+                  <div className="border-l-2 border-border pl-4 transition-colors hover:border-accent">
+                    <h3 className="text-sm font-semibold">{area.title}</h3>
+                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                      {area.body}
+                    </p>
+                  </div>
+                </Reveal>
+              ))}
+            </Reveal>
+          </div>
+        </div>
       </div>
-
-      <Link
-        href="https://www.linkedin.com/in/stephen-adebanjo-82a6ba359/"
-        target="_blank"
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-          className="flex justify-center mt-10 px-4"
-        >
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.9 }}
-            transition={{ duration: 0.2 }}
-            className="py-2 px-3 bg-white shadow-sm rounded-sm w-fit"
-          >
-            <Image
-              src="/img/profile-pic.jpg"
-              width={200}
-              height={200}
-              alt="profile image"
-              className="rounded-sm bg-white w-full max-w-[200px]"
-            />
-            <span className="text-sm block text-center mt-1 text-gray-800">
-              @midecode
-            </span>
-          </motion.div>
-        </motion.div>
-      </Link>
-
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-        transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
-        className="flex justify-center mt-6 px-4"
-      >
-        <Button className="!bg-black/90 text-white !cursor-pointer !py-4 !px-6 hover:!bg-black/82">
-          <a href="#contact" aria-label="Contact for collaboration">
-            Let&apos;s collaborate!
-          </a>
-        </Button>
-      </motion.div>
-    </div>
+    </section>
   );
 };
 

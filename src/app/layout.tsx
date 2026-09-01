@@ -1,69 +1,75 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
+
 import Navbar from "@/components/Navbar";
-import { Toaster } from "@/components/ui/sonner";
 import Footer from "@/components/Footer";
+import Backdrop from "@/components/Backdrop";
+import ThemeProvider from "@/components/ThemeProvider";
+import { Toaster } from "@/components/ui/sonner";
+import { site } from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  display: "swap",
 });
 
+const description =
+  "Full-Stack Engineer building scalable, high-performance products with React, TypeScript and Next.js — backed by resilient services, solid system design and practical AI integration.";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://myportfoliome.vercel.app"),
-  title: "Adebanjo Stephen | Software Engineer",
-  description:
-    "Self-taught software engineer and entrepreneur, specializing in Frontend, Backend, Full-stack development with Next.js, JavaScript, and TypeScript. As the founder of StartupFounder, a platform connecting developers and showcasing startups, I'm is dedicated to fostering innovation and community within the tech industry.",
+  metadataBase: new URL(site.url),
+  title: {
+    default: `${site.name} | ${site.role}`,
+    template: `%s | ${site.name}`,
+  },
+  description,
   keywords: [
-    "Self-taught",
-    "Software Engineer",
-    "Web Development",
-    "Entrepreneur",
-    "Backend",
-    "Full-stack",
-    "Frontend developer",
-    "Next.js",
-    "JavaScript",
+    "Full-Stack Engineer",
+    "Systems Developer",
+    "AI Developer",
+    "Rust Programming",
+    "React",
     "TypeScript",
-    "Tech innovation",
-    "Community building",
-    "Adebanjo Stephen",
+    "Next.js",
+    "Backend Development",
+    "System Design",
+    "Performance Optimization",
+    site.name,
   ],
-  authors: [{ name: "Adebanjo Stephen" }],
-  creator: "Adebanjo Stephen",
-  publisher: "Adebanjo Stephen",
+  authors: [{ name: site.name, url: site.url }],
+  creator: site.name,
+  publisher: site.name,
   formatDetection: { email: false, address: false, telephone: false },
+  alternates: { canonical: "/" },
   icons: {
-    icon: "/profile-image.jpg",
-    shortcut: "/profile-image.jpg",
-    apple: "/profile-image.jpg",
+    icon: "/img/profile-image.jpg",
+    shortcut: "/img/profile-image.jpg",
+    apple: "/img/profile-image.jpg",
   },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://myportfoliome.vercel.app",
-    siteName: "Adebanjo Stephen Portfolio",
-    title: "Adebanjo Stephen | Software Engineer",
-    description:
-      "Self-taught software engineer and entrepreneur, specializing in Frontend, Backend, Full-stack development with Next.js, JavaScript, and TypeScript. As the founder of StartupFounder, a platform connecting developers and showcasing startups, I'm is dedicated to fostering innovation and community within the tech industry.",
+    url: site.url,
+    siteName: `${site.name} Portfolio`,
+    title: `${site.name} | ${site.role}`,
+    description,
     images: [
       {
-        url: "https://myportfoliome.vercel.app/img/profile-pic.jpg",
+        url: "/img/profile-pic.jpg",
         width: 1200,
         height: 630,
-        alt: "Adebanjo Stephen | Software Engineer",
+        alt: `${site.name} | ${site.role}`,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Adebanjo Stephen | Software Engineer",
-    description:
-      "Self-taught software engineer and entrepreneur, specializing in Frontend, Backend, Full-stack development with Next.js, JavaScript, and TypeScript.",
-    creator: "@AdebanjoSt63916",
-    images: ["https://myportfoliome.vercel.app/img/profile-pic.jpg"],
+    title: `${site.name} | ${site.role}`,
+    description,
+    creator: "@binyam_tamiru",
+    images: ["/img/profile-pic.jpg"],
   },
   robots: {
     index: true,
@@ -76,53 +82,73 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  verification: {
-    google: "your-google -verification-code",
-  },
-  manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Adebanjo Stephen Olumide",
+    title: site.name,
   },
 };
 
-<script
-  type="application/ld+json"
-  dangerouslySetInnerHTML={{
-    __html: JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Person",
-      name: "Adebanjo Stephen",
-      url: "https://myportfoliome.vercel.app",
-      image: "https://myportfoliome.vercel.app/img/profile-pic.jpg",
-      sameAs: [
-        "https://github.com/SteeveSticks",
-        "https://x.com/AdebanjoSt63916",
-      ],
-      jobTitle: "Software Engineer",
-      worksFor: {
-        "@type": "Organization",
-        name: "StartupFounder",
-      },
-    }),
-  }}
-/>;
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#fbfaf8" },
+    { media: "(prefers-color-scheme: dark)", color: "#1a1917" },
+  ],
+};
+
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: site.name,
+  url: site.url,
+  image: `${site.url}/img/profile-pic.jpg`,
+  jobTitle: site.role,
+  sameAs: [site.socials.github, site.socials.x, site.socials.linkedin],
+  knowsAbout: [
+    "Full-Stack Development",
+    "Systems Programming",
+    "AI Integration",
+    "React",
+    "TypeScript",
+    "Next.js",
+    "System Design",
+    "Distributed Systems",
+  ],
+};
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} antialiased`}>
-        <main className="font-sans border-b border-l border-r max-w-3xl mx-auto">
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} font-sans antialiased`}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <a
+            href="#main"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-foreground focus:px-4 focus:py-2 focus:text-sm focus:text-background"
+          >
+            Skip to content
+          </a>
+
+          <Backdrop />
           <Navbar />
-          {children}
+          <main id="main">{children}</main>
           <Footer />
-        </main>
-        <Toaster />
+          <Toaster />
+        </ThemeProvider>
+
+        <script
+          type="application/ld+json"
+          // Static, author-controlled object — no user input reaches this.
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
       </body>
     </html>
   );

@@ -6,12 +6,16 @@ import Project from "@/components/Project";
 
 export default function Home() {
   return (
-    <div>
+    <>
       <Hero />
+      <hr className="rule shell" />
       <About />
+      <hr className="rule shell" />
       <Project />
+      <hr className="rule shell" />
       <Experience />
+      <hr className="rule shell" />
       <Contact />
-    </div>
+    </>
   );
 }

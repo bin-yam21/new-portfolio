@@ -1,138 +1,71 @@
 "use client";
 
-import React, { useRef } from "react";
-import { Button } from "./ui/button";
-import { Star } from "lucide-react";
-import { motion, useInView } from "framer-motion";
+import Reveal from "./Reveal";
+import SectionHeading from "./SectionHeading";
+import { experience } from "@/lib/site";
+import { cn } from "@/lib/utils";
 
 const Experience = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
   return (
-    <div id="experience" ref={ref} className="px-2 sm:px-20 lg:px-20">
-      <hr className="mt-30 px-10" />
+    <section id="experience" className="scroll-mt-28 py-24 sm:py-32">
+      <div className="shell">
+        <SectionHeading
+          eyebrow="03 — Experience"
+          title="Where I've been putting the hours."
+        />
 
-      <div className="mt-18 p-6">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          <h2 className="font-bold text-2xl text-black">Work Experience</h2>
+        <Reveal as="group" gap={0.09} delay={0.1} className="mt-14">
+          {/* The vertical rule is drawn by each row's left border so it never
+              runs past the last item. */}
+          <ol className="relative">
+            {experience.map((job, i) => (
+              <Reveal key={`${job.company}-${job.period}`} y={22}>
+                <li
+                  className={cn(
+                    "group relative grid gap-x-8 gap-y-3 border-l pl-8 md:grid-cols-[10rem_minmax(0,1fr)] md:pl-10",
+                    // The rule is drawn by each row's left border, so the last
+                    // row leaves it off rather than trailing past the timeline.
+                    i === experience.length - 1
+                      ? "border-transparent pb-0"
+                      : "border-border pb-12"
+                  )}
+                >
+                  {/* Node on the rule */}
+                  <span
+                    aria-hidden
+                    className="absolute -left-[5px] top-1.5 size-[9px] rounded-full border-2 border-background bg-border-strong transition-colors duration-300 group-hover:bg-accent"
+                  />
 
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-            className="md:flex md:items-center md:justify-between grid mt-8"
-          >
-            <span className="md:text-sm text-[13px] text-gray-500 px-2 mb-2">
-              2024-Present
-            </span>
+                  <p className="font-mono text-xs uppercase tracking-[0.14em] text-subtle-foreground md:pt-1">
+                    {job.period}
+                  </p>
 
-            <div className="flex-center">
-              <h1 className="text-gray-500 max-sm:hidden">
-                Founder and Developer{" "} at
-              </h1>
-              <Button className="bg-[#EEF4FF] text-[#3B82F6] ml-2">
-                <Star />
-                MideCode
-              </Button>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
-            transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
-            className="md:flex md:items-center md:justify-between grid mt-8"
-          >
-            <span className="md:text-sm text-[13px] text-gray-500 px-2 mb-2">
-              2025-2026
-            </span>
-
-            <div className="flex-center">
-              <h1 className="text-gray-500 max-sm:hidden">
-                Frontend Developer at
-              </h1>
-              <Button className="bg-[#EEF4FF] text-[#3B82F6] ml-2">
-                <Star />
-                Bright <span className="text-yellow-600/90">Sparks Academy</span>
-              </Button>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
-            transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
-            className="md:flex md:items-center md:justify-between grid mt-8"
-          >
-            <span className="md:text-sm text-[13px] text-gray-500 px-2 mb-2">
-              2025-Present
-            </span>
-
-            <div className="flex-center">
-              <h1 className="text-gray-500 max-sm:hidden">
-                Externship AI & Machine Learning at
-              </h1>
-              <Button className="bg-[#EEF4FF] text-[#3B82F6] ml-2">
-                <Star />
-                <span className="text-black">
-                  Ex<span className="text-green-800">tern</span>
-                </span>
-              </Button>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
-            transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
-            className="md:flex md:items-center md:justify-between grid mt-8"
-          >
-            <span className="md:text-sm text-[13px] text-gray-500 px-2 mb-2">
-              2025-Present
-            </span>
-
-            <div className="flex-center">
-              <h1 className="text-gray-500 max-sm:hidden">
-              Backend Engineer at 
-              </h1>
-              <Button className="bg-[#EEF4FF] text-[#3B82F6] ml-2">
-                <Star />
-                <span className="text-black">
-                  Zend<span className="text-[#1ABC55]">solv</span>
-                </span>
-              </Button>
-            </div>
-          </motion.div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.6, delay: 0.8, ease: "easeOut" }}
-          className="text-wrap prose border p-2 mt-14 rounded-sm shadow-sm"
-        >
-          <Star className="text-[#3B82F6] mb-2" />
-          <span className="bg-[#EEF4FF] text-[#3B82F6]">
-            As a self-taught dev, I’ve built impactful projects and AI products, solving real problems with
-            Next.js, TypeScript, and AI.
-            <br />
-            I&apos;m actively seeking opportunities to gain hands-on experience,
-            contribute to meaningful products, and grow professionally.{" "}
-            <span className="text-gray-700">
-              If you&apos;re looking for someone hungry to learn and build —
-              let&apos;s connect.
-            </span>
-          </span>
-        </motion.div>
+                  <div>
+                    <h3 className="text-lg font-semibold tracking-tight">
+                      {job.role}
+                    </h3>
+                    <p className="mt-0.5 text-sm text-accent">{job.company}</p>
+                    <p className="mt-3 max-w-xl text-[0.95rem] leading-relaxed text-muted-foreground">
+                      {job.summary}
+                    </p>
+                    <ul className="mt-4 flex flex-wrap gap-1.5">
+                      {job.stack.map((tech) => (
+                        <li
+                          key={tech}
+                          className="rounded-full border border-border bg-muted/60 px-2.5 py-1 font-mono text-[0.7rem] text-muted-foreground"
+                        >
+                          {tech}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </li>
+              </Reveal>
+            ))}
+          </ol>
+        </Reveal>
       </div>
-
-      <hr className="mt-15" />
-    </div>
+    </section>
   );
 };
 

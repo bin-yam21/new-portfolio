@@ -1,11 +1,32 @@
-import { projects } from "../../../../_data/data";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+import { visibleProjects as projects } from "../../../../_data/data";
 import { ProjectPageContent } from "@/components/ProjectPageContent";
 
 export async function generateStaticParams() {
-  return projects.map((project) => ({
-    slug: project.slug,
-  }));
+  return projects.map((project) => ({ slug: project.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const project = projects.find((p) => p.slug === slug);
+
+  if (!project) return { title: "Project not found" };
+
+  return {
+    title: project.name,
+    description: project.show,
+    openGraph: {
+      title: project.name,
+      description: project.show,
+      images: [{ url: `/img/${project.img}`, alt: `${project.name} screenshot` }],
+    },
+  };
 }
 
 const ProjectPage = async ({
@@ -14,17 +35,14 @@ const ProjectPage = async ({
   params: Promise<{ slug: string }>;
 }) => {
   const { slug } = await params;
-  const project = projects.find((p) => p.slug === slug);
+  const index = projects.findIndex((p) => p.slug === slug);
 
-  if (!project) return notFound();
+  if (index === -1) return notFound();
 
   return (
     <ProjectPageContent
-      project={{
-        ...project,
-        img2: project.img2,
-        img3: project.img3,
-      }}
+      project={projects[index]}
+      next={projects[(index + 1) % projects.length]}
     />
   );
 };

@@ -1,106 +1,190 @@
 "use client";
 
-import React, { useState, useRef } from "react";
-import { Button } from "./ui/button";
+import { useState } from "react";
 import { toast } from "sonner";
-import { motion, useInView } from "framer-motion";
+import { ArrowUpRight, Loader2, Mail, Send } from "lucide-react";
+
+import { GithubIcon, LinkedinIcon, XIcon } from "./icons";
+import Reveal from "./Reveal";
+import SectionHeading from "./SectionHeading";
+import { Button } from "./ui/button";
+import { site } from "@/lib/site";
+
+const fieldClass =
+  "w-full rounded-xl border border-border bg-input px-4 py-3 text-[0.95rem] text-foreground " +
+  "placeholder:text-subtle-foreground transition-colors duration-200 " +
+  "hover:border-border-strong focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25";
+
+const labelClass =
+  "mb-2 block font-mono text-[0.7rem] uppercase tracking-[0.14em] text-subtle-foreground";
+
+const elsewhere = [
+  { label: "GitHub", href: site.socials.github, Icon: GithubIcon },
+  { label: "LinkedIn", href: site.socials.linkedin, Icon: LinkedinIcon },
+  { label: "X", href: site.socials.x, Icon: XIcon },
+];
 
 const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [loading, setLoading] = useState(false);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
 
-    const res = await fetch("/api/send", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
+    try {
+      const res = await fetch("/api/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
 
-    setLoading(false);
+      if (!res.ok) throw new Error(`Request failed: ${res.status}`);
 
-    if (res.ok) {
-      toast.success("Message sent 💜!");
+      toast.success("Message sent — I'll get back to you shortly.");
       setForm({ name: "", email: "", message: "" });
-    } else {
-      toast.error("Something went wrong. Please try again.");
+    } catch {
+      // Covers both a failed request and a network drop.
+      toast.error("Couldn't send that. Try again, or email me directly.");
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
-    <div id="contact" ref={ref} className="px-4 sm:px-8 md:px-14 mt-30">
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="grid text-wrap"
-      >
-        <h1 className="text-black font-bold text-3xl">Get in touch</h1>
+    <section id="contact" className="scroll-mt-28 py-24 sm:py-32">
+      <div className="shell">
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
+          {/* ---- Pitch ---- */}
+          <div>
+            <SectionHeading
+              eyebrow="04 — Contact"
+              title="Got something worth building?"
+              description="Freelance work, a collaboration, or a full-time role — if you're building something that needs to hold up, I'd like to hear about it."
+            />
 
-        <p className="prose mt-2 text-gray-600">
-          Whether it&apos;s a freelance gig, a collaboration, or a full-time
-          opportunity, or want to say hi? I&apos;m always excited to connect
-          with people who love building meaningful things. Drop a message, and
-          I&apos;ll get back to you as soon as I can!
-        </p>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-        transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-        className="py-2"
-      >
-        <div className="mt-8">
-          <form onSubmit={handleSubmit} className="">
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
-              <input
-                type="text"
-                id="name"
-                placeholder="Full Name"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full sm:w-auto border py-4 px-6 rounded-xl bg-[#F2F2F2] focus:outline-black"
-                required
-              />
-              <input
-                type="email"
-                id="email"
-                placeholder="Email Address"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="w-full sm:w-auto border py-4 px-8 rounded-xl bg-[#F2F2F2] focus:outline-black"
-                required
-              />
-            </div>
-
-            <div className="mt-2">
-              <textarea
-                placeholder="Hi, Stephen are you up for this role:"
-                id="message"
-                value={form.message}
-                onChange={(e) => setForm({ ...form, message: e.target.value })}
-                className="inline-flex w-full resize-none h-40 px-4 py-3 bg-[#F2F2F2] rounded-xl focus:outline-black mt-2 border"
-              ></textarea>
-            </div>
-
-            <div className="mt-4">
-              <Button
-                className="border text-center py-6 inline-flex w-full cursor-pointer bg-black/90 text-white text-base hover:!bg-black/80"
-                type="submit"
-                disabled={loading}
+            <Reveal delay={0.15} className="mt-10 space-y-6">
+              <a
+                href={`mailto:${site.email}`}
+                className="group inline-flex items-center gap-3 text-[0.95rem]"
               >
-                {loading ? "Sending.." : "Send Message"}
+                <span className="grid size-10 place-items-center rounded-full border border-border bg-card text-muted-foreground transition-colors group-hover:border-accent group-hover:text-accent">
+                  <Mail className="size-[18px]" />
+                </span>
+                <span className="font-medium underline-offset-4 group-hover:text-accent group-hover:underline">
+                  {site.email}
+                </span>
+              </a>
+
+              <div>
+                <p className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-subtle-foreground">
+                  Elsewhere
+                </p>
+                <ul className="mt-3 flex flex-wrap gap-2">
+                  {elsewhere.map(({ label, href, Icon }) => (
+                    <li key={label}>
+                      <a
+                        href={href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="group inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm text-muted-foreground transition-all duration-200 hover:-translate-y-0.5 hover:border-border-strong hover:text-foreground"
+                      >
+                        <Icon className="size-4" />
+                        {label}
+                        <ArrowUpRight className="size-3.5 text-subtle-foreground transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Reveal>
+          </div>
+
+          {/* ---- Form ---- */}
+          <Reveal delay={0.1}>
+            <form
+              onSubmit={handleSubmit}
+              className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8"
+            >
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="name" className={labelClass}>
+                    Name
+                  </label>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    autoComplete="name"
+                    placeholder="Ada Lovelace"
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    className={fieldClass}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="email" className={labelClass}>
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="ada@example.com"
+                    value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    className={fieldClass}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="mt-5">
+                <label htmlFor="message" className={labelClass}>
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows={6}
+                  placeholder="Tell me what you're building, roughly when you need it, and where I'd fit."
+                  value={form.message}
+                  onChange={(e) => setForm({ ...form, message: e.target.value })}
+                  className={`${fieldClass} resize-none`}
+                  required
+                />
+              </div>
+
+              <Button
+                type="submit"
+                size="lg"
+                disabled={loading}
+                className="mt-6 w-full"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="animate-spin" />
+                    Sending…
+                  </>
+                ) : (
+                  <>
+                    Send message
+                    <Send className="size-4" />
+                  </>
+                )}
               </Button>
-            </div>
-          </form>
+
+              <p className="mt-4 text-center text-xs text-subtle-foreground">
+                Usually replies within a day.
+              </p>
+            </form>
+          </Reveal>
         </div>
-      </motion.div>
-    </div>
+      </div>
+    </section>
   );
 };
 
