@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
@@ -100,33 +99,8 @@ const About = () => {
             </Reveal>
           </Reveal>
 
-          {/* ---- Portrait card + focus areas ---- */}
+          {/* ---- Focus areas ---- */}
           <div className="space-y-8">
-            <Reveal delay={0.1}>
-              <a
-                href={site.socials.linkedin}
-                target="_blank"
-                rel="noreferrer"
-                className="group block overflow-hidden rounded-2xl border border-border bg-card p-2.5 shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
-              >
-                <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-muted">
-                  <Image
-                    src="/img/profile-pic.jpg"
-                    alt={`${site.name} portrait`}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 380px"
-                    className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                  />
-                </div>
-                <div className="flex items-center justify-between px-2 py-3">
-                  <span className="font-mono text-xs tracking-tight text-muted-foreground">
-                    {site.handle}
-                  </span>
-                  <ArrowUpRight className="size-4 text-subtle-foreground transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent" />
-                </div>
-              </a>
-            </Reveal>
-
             <Reveal as="group" gap={0.07} className="space-y-4">
               {focusAreas.map((area) => (
                 <Reveal key={area.title}>
