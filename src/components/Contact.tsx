@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { ArrowUpRight, Loader2, Mail, Send } from "lucide-react";
 
-import { GithubIcon, LinkedinIcon, XIcon } from "./icons";
+import { GithubIcon, LinkedinIcon, TelegramIcon, XIcon } from "./icons";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
 import { Button } from "./ui/button";
@@ -19,6 +19,7 @@ const labelClass =
   "mb-2 block font-mono text-[0.7rem] uppercase tracking-[0.14em] text-subtle-foreground";
 
 const elsewhere = [
+  { label: "Telegram", href: site.socials.telegram, Icon: TelegramIcon },
   { label: "GitHub", href: site.socials.github, Icon: GithubIcon },
   { label: "LinkedIn", href: site.socials.linkedin, Icon: LinkedinIcon },
   { label: "X", href: site.socials.x, Icon: XIcon },
@@ -73,6 +74,20 @@ const Contact = () => {
                 </span>
                 <span className="font-medium underline-offset-4 group-hover:text-accent group-hover:underline">
                   {site.email}
+                </span>
+              </a>
+
+              <a
+                href={site.socials.telegram}
+                target="_blank"
+                rel="noreferrer"
+                className="group flex items-center gap-3 text-[0.95rem]"
+              >
+                <span className="grid size-10 place-items-center rounded-full border border-border bg-card text-muted-foreground transition-colors group-hover:border-accent group-hover:text-accent">
+                  <TelegramIcon className="size-[18px]" />
+                </span>
+                <span className="font-medium underline-offset-4 group-hover:text-accent group-hover:underline">
+                  Message me on Telegram
                 </span>
               </a>
 

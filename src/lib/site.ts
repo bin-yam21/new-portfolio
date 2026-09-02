@@ -18,6 +18,7 @@ export const site = {
     github: "https://github.com/bin-yam21",
     linkedin: "https://www.linkedin.com/in/binyam-tamiru",
     x: "https://x.com/binyam_tamiru",
+    telegram: "https://t.me/Binii_123",
   },
 } as const;
 

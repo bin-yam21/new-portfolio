@@ -57,9 +57,9 @@ export const metadata: Metadata = {
     description,
     images: [
       {
-        url: "/img/profile-pic.jpg",
-        width: 1200,
-        height: 630,
+        url: "/img/schema-visualizer.png",
+        width: 1600,
+        height: 1000,
         alt: `${site.name} | ${site.role}`,
       },
     ],
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
     title: `${site.name} | ${site.role}`,
     description,
     creator: "@binyam_tamiru",
-    images: ["/img/profile-pic.jpg"],
+    images: ["/img/schema-visualizer.png"],
   },
   robots: {
     index: true,
@@ -101,7 +101,7 @@ const personJsonLd = {
   "@type": "Person",
   name: site.name,
   url: site.url,
-  image: `${site.url}/img/profile-pic.jpg`,
+  image: `${site.url}/img/profile-image.jpg`,
   jobTitle: site.role,
   sameAs: [site.socials.github, site.socials.x, site.socials.linkedin],
   knowsAbout: [
