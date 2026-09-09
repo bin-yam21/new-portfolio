@@ -4,7 +4,14 @@ import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, ExternalLink, Expand, X } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  ExternalLink,
+  Expand,
+  Hammer,
+  X,
+} from "lucide-react";
 
 import type { Project } from "../../_data/data";
 import { GithubIcon } from "./icons";
@@ -106,6 +113,14 @@ export function ProjectPageContent({ project, next }: Props) {
         </Reveal>
 
         <Reveal as="group" gap={0.07} delay={0.05} className="mt-8">
+          {project.status === "building" ? (
+            <Reveal>
+              <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-accent/25 bg-accent-soft px-3 py-1.5 text-xs font-medium text-accent">
+                <Hammer className="size-3.5" />
+                In progress — actively building this
+              </span>
+            </Reveal>
+          ) : null}
           <Reveal>
             <h1 className="text-4xl font-semibold tracking-[-0.03em] sm:text-5xl md:text-[3.5rem] md:leading-[1.05]">
               {project.name}
@@ -116,6 +131,19 @@ export function ProjectPageContent({ project, next }: Props) {
               {project.show}
             </p>
           </Reveal>
+
+          {project.statusNote ? (
+            <Reveal>
+              <div className="mt-6 max-w-2xl rounded-xl border border-border bg-card p-4 shadow-[var(--shadow-soft)] sm:p-5">
+                <p className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-subtle-foreground">
+                  Where it&apos;s at
+                </p>
+                <p className="mt-2 text-[0.95rem] leading-relaxed text-muted-foreground">
+                  {project.statusNote}
+                </p>
+              </div>
+            </Reveal>
+          ) : null}
 
           <Reveal>
             <div className="mt-8 flex flex-wrap gap-3">

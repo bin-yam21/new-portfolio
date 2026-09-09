@@ -40,6 +40,18 @@ export type Project = {
    */
   outcomes?: string[];
   /**
+   * Where the build has got to. `building` puts an "In progress" badge on the
+   * card and the project page, so work that isn't finished can be shown
+   * honestly instead of waiting in the drawer until it is. Omitting it means
+   * shipped.
+   */
+  status?: "shipped" | "building";
+  /**
+   * One line under the status badge saying what's done and what's next. Only
+   * read when `status` is set.
+   */
+  statusNote?: string;
+  /**
    * On/off switch. Set to `false` to hide a project everywhere — homepage,
    * the /projects archive and its own page — without deleting the entry.
    * Omitting it (or `true`) keeps the project shown.
@@ -99,23 +111,26 @@ export const projects: Project[] = [
   {
     name: "MockGen",
     slug: "mockgen",
-    show: "VS Code extension and CLI that scans a workspace for API endpoints and spins up a realistic local mock server.",
-    desc: "A developer tool that removes the wait for a backend. It scans the JS/TS files in a workspace for API endpoints, extracts the TypeScript types behind them, and generates a realistic mock definition. From there it runs a local mock server with hot reload, plus a dashboard with Swagger/OpenAPI UI, inline mock editing and request charts — all driven from the VS Code command palette. Ships as a CLI and a companion extension.",
+    show: "CLI and VS Code extension that reads the API calls out of your codebase and serves a realistic mock backend from them — scan, generate and serve in one command.",
+    desc: "A developer tool that removes the wait for a backend. MockGen walks the JS/TS source with an AST scanner, finds the API calls and the TypeScript types behind them, and derives a mock schema from the code itself rather than from a document somebody has to maintain. `mockgen start` runs the whole pipeline — scan, generate, serve — in one command, and the mock server comes up with hot reload and a dashboard for inspecting and editing responses. Data generation is pluggable: a Faker engine for realistic values out of the box, a custom engine for domain-specific fields, and an AI engine when the values need to make sense together. A contract-validation pass checks live responses against the generated schema and reports where an implementation has drifted from what the client expects. Ships as a CLI, a companion VS Code extension driven from the command palette, and a documentation site.",
     lang: [
       "TypeScript",
-      "VS Code API",
       "Node.js",
+      "AST / ts-morph",
+      "VS Code API",
       "esbuild",
       "OpenAPI",
-      "Swagger UI",
+      "React",
+      "Vite",
     ],
     img: "mockgen.png",
     git: "https://github.com/bin-yam21/mockgen-cli",
-    visible: false, // hidden until a screenshot is added
+    // Feature-complete — flip to `true` once public/img/mockgen.png lands.
+    visible: false,
     problem:
-      "Frontend work stalls whenever the API it depends on isn't ready. Hand-written mocks drift from the real endpoints almost immediately, and keeping them current is unrewarding work nobody volunteers for.",
+      "Frontend work stalls whenever the API it depends on isn't ready, and the usual escape hatch makes it worse: hand-written mocks drift from the real endpoints within days, so you end up building against a fiction. Keeping them current is unrewarding work nobody volunteers for, and nothing tells you when the real API has moved.",
     solution:
-      "Built a scanner that reads endpoints and their TypeScript types straight out of the workspace, so the mocks are derived from the code rather than maintained alongside it. Generated mocks are served by a local server with hot reload, and a dashboard exposes Swagger UI, inline editing and charts. Packaged as both a CLI and a VS Code extension so it fits either workflow.",
+      "Derived the mocks from the code instead of maintaining them beside it — an AST scanner reads the endpoints and their TypeScript types straight out of the workspace, so the mock schema is a product of the source and regenerates when the source changes. `mockgen start` collapses scan, generate and serve into one command; pluggable generation engines (Faker, custom, AI) decide how realistic the values need to be; and a contract-validation pass diffs live responses against the schema so drift surfaces as a report rather than a bug. Packaged as a CLI, a VS Code extension and a docs site so it fits whichever way a team works.",
   },
   {
     name: "Rust Chat",
@@ -148,14 +163,30 @@ export const projects: Project[] = [
       "Used Axum's WebSocket support on top of Tokio so connections are cheap to hold open, with a per-room broadcast channel fanning messages out to every client. Because browsers can't set an Authorization header on a WebSocket handshake, the JWT is passed as a query param and validated before the upgrade. Persistence runs through SQLx against Postgres with versioned migrations, the whole API is documented with an OpenAPI 3 spec served via Swagger UI at /docs, and a Vite/React frontend provides the live chat interface.",
   },
   {
-    name: "Lewe",
+    name: "Lewe — Barter Marketplace",
     slug: "lewe",
-    show: "Go backend service with JWT auth, Postgres and versioned migrations, laid out to the standard cmd/internal structure.",
-    desc: "A Go API service built on the parts of the ecosystem that hold up in production: pgx talking to Postgres directly rather than through an ORM, sqlc generating type-safe query code from plain SQL, and golang-migrate keeping schema changes versioned and reversible. Authentication is JWT with bcrypt password hashing. Organised to the conventional cmd/ and internal/ layout, with the design captured in a written spec alongside the code.",
-    lang: ["Go", "PostgreSQL", "pgx", "sqlc", "golang-migrate", "JWT"],
+    show: "A marketplace for trading things instead of buying them: a Go API that finds mutual matches between what people have and what they want, plus a React Native app.",
+    desc: "Lewe is a barter marketplace. You list what you have, say which categories you'd take in return, and the system looks for the mutual match — someone who wants your item and has one you want. Both sides accept, both confirm the exchange happened, then both rate each other. The API is Go with no web framework: stdlib net/http and the Go 1.22 ServeMux routing patterns, with each domain (users, items, matching, ratings) as a self-contained package layered handler → service → repository. Persistence is pgx straight onto Postgres with a pgxpool and golang-migrate migrations that run on boot; auth is a 15-minute HS256 access token alongside an opaque 7-day refresh token. The client is a React Native app on Expo Router — a feed, listing creation with photo upload, item detail, offers, a trades screen and a profile — with React Query over the API and tokens held in SecureStore.",
+    lang: [
+      "Go",
+      "PostgreSQL",
+      "pgx",
+      "golang-migrate",
+      "JWT",
+      "React Native",
+      "Expo",
+      "TypeScript",
+      "React Query",
+    ],
     img: "lewe.png",
     git: "https://github.com/bin-yam21/lewe",
-    visible: false, // hidden until a screenshot is added
+    status: "building",
+    statusNote:
+      "API done — 21 endpoints covering auth, listings, the matching state machine and ratings. The React Native app is in progress: auth, feed, listing creation with photos, offers and trades are working. Next up: cursor pagination, push notifications and in-match messaging.",
+    problem:
+      "Barter has a hard problem underneath it that buying doesn't: the double coincidence of wants. It isn't enough to find someone who wants your bike — they also have to be offering something you'd actually take. Search doesn't solve that, because the thing you're looking for is a *pair*, and neither half of it is a query you can type.",
+    solution:
+      "Modelled the wants explicitly rather than leaving them implicit in search. Every listing carries the categories its owner would accept, which turns discovery into a bidirectional match — find the items where their want matches my category and my want matches theirs. From there it's a state machine: proposed → both accepted → both confirmed → rateable, with item status kept in step so nothing gets matched twice, and ratings gated on a match that actually completed so reputation can't be manufactured.",
   },
   {
     name: "The Archive — Thrift Marketplace",

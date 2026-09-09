@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight, Lock, Play, Radio } from "lucide-react";
+import { ArrowUpRight, Hammer, Lock, Play, Radio } from "lucide-react";
 
 import type { Project } from "../../_data/data";
 import ProjectThumb from "./ProjectThumb";
@@ -40,8 +40,14 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
             <span>Watch Demo</span>
           </span>
         ) : null}
-        {/* Status badges (live deployment / private work) — top-right */}
+        {/* Status badges (in progress / live deployment / private work) */}
         <div className="absolute right-3 top-3 flex flex-col items-end gap-1.5">
+          {project.status === "building" ? (
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-accent px-2.5 py-1 text-[0.7rem] font-medium text-accent-foreground shadow-sm backdrop-blur-md">
+              <Hammer className="size-2.5" />
+              <span>In progress</span>
+            </span>
+          ) : null}
           {hasLiveDemo ? (
             <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/90 px-2.5 py-1 text-[0.7rem] font-medium text-white backdrop-blur-md border border-white/20 shadow-sm">
               <Radio className="size-2.5 animate-pulse" />
