@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, Download } from "lucide-react";
 
 import { Button } from "./ui/button";
 import StackLoop from "./StackLoop";
@@ -100,6 +100,13 @@ const Hero = () => {
                   <ArrowUpRight className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </Link>
               </Button>
+              {/* Third, quieter action: recruiters look for this first. */}
+              <Button asChild variant="ghost" size="lg" className="group">
+                <a href={site.resume} download target="_blank" rel="noopener noreferrer">
+                  <Download className="transition-transform duration-200 group-hover:translate-y-0.5" />
+                  Résumé
+                </a>
+              </Button>
             </motion.div>
 
             {/* ---- Stats ---- */}
@@ -128,24 +135,29 @@ const Hero = () => {
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.9, delay: 0.2, ease }}
-            className="relative mx-auto lg:mx-0"
+            /* pb/pr leave room for the offset caption so it can't spill out of
+               the section on narrow screens. */
+            className="relative mx-auto w-fit pb-4 pr-4 lg:mx-0"
           >
             <div className="absolute -inset-6 rounded-full bg-accent/15 blur-3xl" />
             <div className="relative size-40 overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-lift)] sm:size-52 lg:size-64">
               <Image
                 src="/img/profile-image.jpg"
-                alt={site.name}
+                alt={`${site.name}, ${site.role}`}
                 fill
                 sizes="(max-width: 640px) 160px, (max-width: 1024px) 208px, 256px"
                 className="object-cover"
                 priority
               />
             </div>
-            <div className="absolute -bottom-3 -right-3 rounded-xl border border-border bg-card px-3 py-2 shadow-[var(--shadow-soft)]">
+            <div className="absolute bottom-0 right-0 max-w-[11rem] rounded-xl border border-border bg-card px-3 py-2 shadow-[var(--shadow-soft)]">
               <p className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-subtle-foreground">
                 Based in
               </p>
-              <p className="text-sm font-medium">{site.location}</p>
+              <p className="text-sm font-medium">{site.locationShort}</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                {site.timezone} · Remote
+              </p>
             </div>
           </motion.div>
         </div>

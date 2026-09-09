@@ -1,12 +1,13 @@
 {
-  "name": "my-app",
+  "name": "binyam-tamiru-portfolio",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@radix-ui/react-hover-card": "^1.1.13",

@@ -8,6 +8,7 @@ import { ArrowLeft, ArrowRight, ExternalLink, Expand, X } from "lucide-react";
 
 import type { Project } from "../../_data/data";
 import { GithubIcon } from "./icons";
+import ProjectDemo from "./ProjectDemo";
 import ProjectThumb from "./ProjectThumb";
 import Reveal from "./Reveal";
 import { Button } from "@/components/ui/button";
@@ -126,16 +127,26 @@ export function ProjectPageContent({ project, next }: Props) {
                   </a>
                 </Button>
               ) : null}
-              {/* Source becomes the primary action when there's no deployment. */}
-              <Button
-                asChild
-                size="lg"
-                variant={project.link ? "outline" : "default"}
-              >
-                <a href={project.git} target="_blank" rel="noreferrer">
-                  <GithubIcon />
-                  View source
-                </a>
+              {/* Source becomes the primary action when there's no deployment.
+                  Confidential work has no repo, so the button is omitted
+                  rather than rendered as an anchor with no href. */}
+              {project.git ? (
+                <Button
+                  asChild
+                  size="lg"
+                  variant={project.link ? "outline" : "default"}
+                >
+                  <a href={project.git} target="_blank" rel="noreferrer">
+                    <GithubIcon />
+                    View source
+                  </a>
+                </Button>
+              ) : null}
+              <Button asChild size="lg" variant="ghost" className="group">
+                <Link href="/#contact">
+                  Work with me
+                  <ArrowRight className="transition-transform duration-200 group-hover:translate-x-0.5" />
+                </Link>
               </Button>
             </div>
           </Reveal>
@@ -213,6 +224,9 @@ export function ProjectPageContent({ project, next }: Props) {
           </Reveal>
         </div>
 
+        {/* ---- Demonstration / Video Walkthrough ---- */}
+        <ProjectDemo project={project} />
+
         {/* ---- Gallery ---- */}
         {gallery.length > 0 ? (
           <Reveal
@@ -234,9 +248,34 @@ export function ProjectPageContent({ project, next }: Props) {
           </Reveal>
         ) : null}
 
+        {/* ---- Hire CTA ---- */}
+        <Reveal className="mt-20">
+          <div className="rounded-2xl border border-border bg-card p-7 text-center shadow-[var(--shadow-soft)] sm:p-9">
+            <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
+              Want something like this built?
+            </h2>
+            <p className="mx-auto mt-2.5 max-w-md text-sm leading-relaxed text-muted-foreground">
+              I&apos;m available for full-time, contract and freelance work.
+              Tell me what you&apos;re building and I&apos;ll come back within
+              a day.
+            </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Button asChild size="lg" className="group">
+                <Link href="/#contact">
+                  Get in touch
+                  <ArrowRight className="transition-transform duration-200 group-hover:translate-x-1" />
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <Link href="/projects">Browse more work</Link>
+              </Button>
+            </div>
+          </div>
+        </Reveal>
+
         {/* ---- Next project ---- */}
         {next && next.slug !== project.slug ? (
-          <Reveal className="mt-20">
+          <Reveal className="mt-16">
             <hr className="rule" />
             <Link
               href={`/project/${next.slug}`}

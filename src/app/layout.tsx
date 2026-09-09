@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 import Backdrop from "@/components/Backdrop";
 import ThemeProvider from "@/components/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
-import { site } from "@/lib/site";
+import { experience, site } from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,7 +16,7 @@ const geistSans = Geist({
 });
 
 const description =
-  "Full-Stack Engineer building scalable, high-performance products with React, TypeScript and Next.js — backed by resilient services, solid system design and practical AI integration.";
+  "Full-stack engineer available for full-time, contract and freelance work. I build products end to end — React, Next.js and TypeScript interfaces on Node.js, Go and Rust services — and ship them.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -43,11 +43,6 @@ export const metadata: Metadata = {
   publisher: site.name,
   formatDetection: { email: false, address: false, telephone: false },
   alternates: { canonical: "/" },
-  icons: {
-    icon: "/img/profile-image.jpg",
-    shortcut: "/img/profile-image.jpg",
-    apple: "/img/profile-image.jpg",
-  },
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -55,21 +50,12 @@ export const metadata: Metadata = {
     siteName: `${site.name} Portfolio`,
     title: `${site.name} | ${site.role}`,
     description,
-    images: [
-      {
-        url: "/img/schema-visualizer.png",
-        width: 1600,
-        height: 1000,
-        alt: `${site.name} | ${site.role}`,
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: `${site.name} | ${site.role}`,
     description,
     creator: "@binyam_tamiru",
-    images: ["/img/schema-visualizer.png"],
   },
   robots: {
     index: true,
@@ -102,17 +88,38 @@ const personJsonLd = {
   name: site.name,
   url: site.url,
   image: `${site.url}/img/profile-image.jpg`,
+  email: `mailto:${site.email}`,
   jobTitle: site.role,
+  description,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Addis Ababa",
+    addressCountry: "ET",
+  },
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "Bahir Dar University",
+  },
+  worksFor: experience.map((job) => ({
+    "@type": "Organization",
+    name: job.company,
+  })),
+  seeks: {
+    "@type": "Demand",
+    name: "Full-time, contract and freelance software engineering work",
+  },
   sameAs: [site.socials.github, site.socials.x, site.socials.linkedin],
   knowsAbout: [
     "Full-Stack Development",
     "Systems Programming",
-    "AI Integration",
     "React",
     "TypeScript",
     "Next.js",
+    "Node.js",
+    "Go",
+    "Rust",
+    "PostgreSQL",
     "System Design",
-    "Distributed Systems",
   ],
 };
 
@@ -120,7 +127,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <body
         className={`${geistSans.variable} font-sans antialiased`}
       >

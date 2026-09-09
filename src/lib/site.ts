@@ -5,15 +5,20 @@
 export const site = {
   name: "Binyam Tamiru",
   handle: "@bin-yam21",
-  role: "MERN Stack Developer & Full-Stack Engineer",
+  role: "Full-Stack Engineer",
+  /** Longer form for the footer, the résumé card and JSON-LD. */
+  roleLong: "Full-Stack Engineer — React, Next.js, Node.js, Go & Rust",
   url: "https://binyam-tamiru.vercel.app",
-  location: "Bahir Dar, Ethiopia · Open to remote & relocation",
+  location: "Addis Ababa, Ethiopia",
+  /** Short form for the hero badge, where the card is only a few rem wide. */
+  locationShort: "Addis Ababa, ET",
+  timezone: "GMT+3",
   available: true,
-  // TODO: swap for a public-facing address if you'd rather not publish this one.
+  /** Published on the page and used as the contact form's reply-to. */
   email: "biniyam374@gmail.com",
   resume: "/Binyam-Tamiru-CV.pdf",
   tagline:
-    "MERN Stack developer who owns products end to end — React and Next.js interfaces, REST APIs, database design and Docker deployment — and reaches for Go and Rust when a service needs raw performance.",
+    "I own products end to end — React and Next.js interfaces, REST APIs, database design and Docker deployment — and reach for Go or Rust when a service needs raw performance.",
   socials: {
     github: "https://github.com/bin-yam21",
     linkedin: "https://www.linkedin.com/in/binyam-tamiru",
@@ -22,18 +27,28 @@ export const site = {
   },
 } as const;
 
+/**
+ * What a hiring manager or client actually needs to know before writing the
+ * first email. Rendered as the availability band under the hero.
+ */
+export const availability = {
+  headline: "Open to full-time, contract and freelance work",
+  blurb:
+    "Remote-first from Ethiopia (GMT+3), with working hours that overlap most of the European day and European mornings in the US. Open to relocation for the right team.",
+  points: [
+    { label: "Engagement", value: "Full-time · Contract · Freelance" },
+    { label: "Availability", value: "Can start immediately" },
+    { label: "Timezone", value: "GMT+3 — overlaps EU & US mornings" },
+    { label: "Response time", value: "Usually within a day" },
+  ],
+} as const;
+
 export const navLinks = [
-  { label: "Work", href: "/#work", id: "work" },
+  // Ordered to match the sections as they appear on the homepage.
   { label: "About", href: "/#about", id: "about" },
+  { label: "Work", href: "/#work", id: "work" },
   { label: "Experience", href: "/#experience", id: "experience" },
   { label: "Contact", href: "/#contact", id: "contact" },
-] as const;
-
-/** Kept to numbers that github.com/bin-yam21 actually backs up. */
-export const stats = [
-  { value: "35", label: "Public repos" },
-  { value: "4", label: "Core languages" },
-  { value: "2024", label: "Shipping since" },
 ] as const;
 
 export type Experience = {
@@ -78,3 +93,13 @@ export const experience: Experience[] = [
     stack: ["Backend", "REST APIs", "Authentication", "System Design"],
   },
 ];
+
+/**
+ * Kept to numbers the CV and github.com/bin-yam21 actually back up. The first
+ * one is derived from `experience`, so it can never drift out of date.
+ */
+export const stats = [
+  { value: String(experience.length), label: "Teams shipped for" },
+  { value: "35", label: "Public repos" },
+  { value: "2024", label: "Shipping since" },
+] as const;

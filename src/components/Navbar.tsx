@@ -57,13 +57,30 @@ const Navbar = () => {
     return () => observer.disconnect();
   }, [isHome]);
 
-  // Lock scroll behind the mobile sheet.
+  // Lock scroll behind the mobile sheet, and let Escape dismiss it.
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    if (!open) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
     };
   }, [open]);
+
+  // A hash link to a section the sheet is covering navigates without
+  // unmounting the nav, so the sheet has to be closed explicitly on any
+  // pathname change too.
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 pt-3 sm:pt-4">
@@ -167,6 +184,7 @@ const Navbar = () => {
               onClick={() => setOpen((v) => !v)}
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
+              aria-controls="mobile-nav"
               className="grid size-9 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:hidden"
             >
               {open ? <X className="size-5" /> : <Menu className="size-5" />}
@@ -185,7 +203,10 @@ const Navbar = () => {
             transition={{ duration: 0.2 }}
             className="shell mt-2 md:hidden"
           >
-            <ul className="card-surface overflow-hidden p-2 backdrop-blur-xl">
+            <ul
+              id="mobile-nav"
+              className="card-surface overflow-hidden p-2 backdrop-blur-xl"
+            >
               {navLinks.map((link) => (
                 <li key={link.id}>
                   <Link

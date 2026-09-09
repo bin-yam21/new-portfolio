@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Download } from "lucide-react";
 
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
@@ -43,8 +43,8 @@ const About = () => {
           <Reveal as="group" className="space-y-5 text-[1.0625rem] leading-relaxed text-muted-foreground">
             <Reveal>
               <p>
-                I&apos;m {site.name}, a MERN-stack and full-stack engineer and a
-                2026 Software Engineering graduate of Bahir Dar University. I
+                I&apos;m {site.name}, a full-stack engineer and a 2026 Software
+                Engineering graduate of Bahir Dar University. I
                 like the unglamorous parts: the data model that holds up under
                 real load, the error state nobody thought about, the build that
                 stays under a minute a year from now.
@@ -83,6 +83,17 @@ const About = () => {
                   Start a conversation
                   <ArrowUpRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </Link>
+                <span aria-hidden className="text-border-strong">
+                  /
+                </span>
+                <a
+                  href={site.resume}
+                  download
+                  className="group inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground underline-offset-4 hover:text-accent hover:underline"
+                >
+                  Download résumé
+                  <Download className="size-4 transition-transform duration-200 group-hover:translate-y-0.5" />
+                </a>
                 <span aria-hidden className="text-border-strong">
                   /
                 </span>
