@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Hammer, Lock, Play, Radio } from "lucide-react";
 
 import type { Project } from "../../_data/data";
 import ProjectThumb from "./ProjectThumb";
@@ -17,6 +17,8 @@ type ProjectCardProps = {
  * a hairline overlay layered on the screenshot.
  */
 export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
+  const hasLiveDemo = Boolean(project.demoUrl || project.link);
+
   return (
     <Link
       href={`/project/${project.slug}`}
@@ -31,6 +33,34 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
           className="object-cover object-top transition-transform duration-[600ms] ease-out group-hover:scale-[1.04]"
           priority={index < 2}
         />
+        {/* Video demo badge */}
+        {project.video ? (
+          <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/65 px-2.5 py-1 text-[0.7rem] font-medium text-white backdrop-blur-md border border-white/15 shadow-sm transition-transform duration-200 group-hover:scale-105">
+            <Play className="size-2.5 fill-accent text-accent" />
+            <span>Watch Demo</span>
+          </span>
+        ) : null}
+        {/* Status badges (in progress / live deployment / private work) */}
+        <div className="absolute right-3 top-3 flex flex-col items-end gap-1.5">
+          {project.status === "building" ? (
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-accent px-2.5 py-1 text-[0.7rem] font-medium text-accent-foreground shadow-sm backdrop-blur-md">
+              <Hammer className="size-2.5" />
+              <span>In progress</span>
+            </span>
+          ) : null}
+          {hasLiveDemo ? (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/90 px-2.5 py-1 text-[0.7rem] font-medium text-white backdrop-blur-md border border-white/20 shadow-sm">
+              <Radio className="size-2.5 animate-pulse" />
+              <span>Live Demo</span>
+            </span>
+          ) : null}
+          {project.confidential ? (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-black/65 px-2.5 py-1 text-[0.7rem] font-medium text-white backdrop-blur-md border border-white/15 shadow-sm">
+              <Lock className="size-2.5" />
+              <span>Private / NDA</span>
+            </span>
+          ) : null}
+        </div>
         {/* Keeps the top edge readable regardless of the screenshot. */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       </div>

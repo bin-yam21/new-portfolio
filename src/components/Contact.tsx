@@ -25,12 +25,17 @@ const elsewhere = [
   { label: "X", href: site.socials.x, Icon: XIcon },
 ];
 
+const MESSAGE_MAX = 5000;
+
+const emptyForm = { name: "", email: "", message: "", company: "" };
+
 const Contact = () => {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [form, setForm] = useState(emptyForm);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (loading) return;
     setLoading(true);
 
     try {
@@ -40,13 +45,24 @@ const Contact = () => {
         body: JSON.stringify(form),
       });
 
-      if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+      // The route explains *why* it refused (validation, rate limit, missing
+      // config); passing that through beats a generic "try again".
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(
+          (data as { error?: string } | null)?.error ??
+            "Couldn't send that. Try again, or email me directly."
+        );
+      }
 
       toast.success("Message sent — I'll get back to you shortly.");
-      setForm({ name: "", email: "", message: "" });
-    } catch {
-      // Covers both a failed request and a network drop.
-      toast.error("Couldn't send that. Try again, or email me directly.");
+      setForm(emptyForm);
+    } catch (err) {
+      toast.error(
+        err instanceof Error && err.message
+          ? err.message
+          : "Couldn't send that. Try again, or email me directly."
+      );
     } finally {
       setLoading(false);
     }
@@ -59,7 +75,7 @@ const Contact = () => {
           {/* ---- Pitch ---- */}
           <div>
             <SectionHeading
-              eyebrow="04 — Contact"
+              eyebrow="05 — Contact"
               title="Got something worth building?"
               description="Freelance work, a collaboration, or a full-time role — if you're building something that needs to hold up, I'd like to hear about it."
             />
@@ -119,7 +135,7 @@ const Contact = () => {
           <Reveal delay={0.1}>
             <form
               onSubmit={handleSubmit}
-              className="rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8"
+              className="relative rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-soft)] sm:p-8"
             >
               <div className="grid gap-5 sm:grid-cols-2">
                 <div>
@@ -135,6 +151,7 @@ const Contact = () => {
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     className={fieldClass}
+                    maxLength={120}
                     required
                   />
                 </div>
@@ -152,15 +169,24 @@ const Contact = () => {
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                     className={fieldClass}
+                    maxLength={200}
                     required
                   />
                 </div>
               </div>
 
               <div className="mt-5">
-                <label htmlFor="message" className={labelClass}>
-                  Message
-                </label>
+                <div className="flex items-baseline justify-between">
+                  <label htmlFor="message" className={labelClass}>
+                    Message
+                  </label>
+                  <span
+                    aria-hidden
+                    className="mb-2 font-mono text-[0.7rem] text-subtle-foreground"
+                  >
+                    {form.message.length}/{MESSAGE_MAX}
+                  </span>
+                </div>
                 <textarea
                   id="message"
                   name="message"
@@ -169,7 +195,24 @@ const Contact = () => {
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
                   className={`${fieldClass} resize-none`}
+                  minLength={10}
+                  maxLength={MESSAGE_MAX}
                   required
+                />
+              </div>
+
+              {/* Honeypot — hidden from people, irresistible to bots. Not
+                  `display: none`, which some bots skip. */}
+              <div aria-hidden className="absolute left-[-9999px] top-0 h-0 w-0 overflow-hidden">
+                <label htmlFor="company">Company (leave this empty)</label>
+                <input
+                  id="company"
+                  name="company"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={form.company}
+                  onChange={(e) => setForm({ ...form, company: e.target.value })}
                 />
               </div>
 

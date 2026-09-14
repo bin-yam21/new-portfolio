@@ -4,10 +4,18 @@ import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, ExternalLink, Expand, X } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  ExternalLink,
+  Expand,
+  Hammer,
+  X,
+} from "lucide-react";
 
 import type { Project } from "../../_data/data";
 import { GithubIcon } from "./icons";
+import ProjectDemo from "./ProjectDemo";
 import ProjectThumb from "./ProjectThumb";
 import Reveal from "./Reveal";
 import { Button } from "@/components/ui/button";
@@ -105,6 +113,14 @@ export function ProjectPageContent({ project, next }: Props) {
         </Reveal>
 
         <Reveal as="group" gap={0.07} delay={0.05} className="mt-8">
+          {project.status === "building" ? (
+            <Reveal>
+              <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-accent/25 bg-accent-soft px-3 py-1.5 text-xs font-medium text-accent">
+                <Hammer className="size-3.5" />
+                In progress — actively building this
+              </span>
+            </Reveal>
+          ) : null}
           <Reveal>
             <h1 className="text-4xl font-semibold tracking-[-0.03em] sm:text-5xl md:text-[3.5rem] md:leading-[1.05]">
               {project.name}
@@ -116,6 +132,19 @@ export function ProjectPageContent({ project, next }: Props) {
             </p>
           </Reveal>
 
+          {project.statusNote ? (
+            <Reveal>
+              <div className="mt-6 max-w-2xl rounded-xl border border-border bg-card p-4 shadow-[var(--shadow-soft)] sm:p-5">
+                <p className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-subtle-foreground">
+                  Where it&apos;s at
+                </p>
+                <p className="mt-2 text-[0.95rem] leading-relaxed text-muted-foreground">
+                  {project.statusNote}
+                </p>
+              </div>
+            </Reveal>
+          ) : null}
+
           <Reveal>
             <div className="mt-8 flex flex-wrap gap-3">
               {project.link ? (
@@ -126,16 +155,26 @@ export function ProjectPageContent({ project, next }: Props) {
                   </a>
                 </Button>
               ) : null}
-              {/* Source becomes the primary action when there's no deployment. */}
-              <Button
-                asChild
-                size="lg"
-                variant={project.link ? "outline" : "default"}
-              >
-                <a href={project.git} target="_blank" rel="noreferrer">
-                  <GithubIcon />
-                  View source
-                </a>
+              {/* Source becomes the primary action when there's no deployment.
+                  Confidential work has no repo, so the button is omitted
+                  rather than rendered as an anchor with no href. */}
+              {project.git ? (
+                <Button
+                  asChild
+                  size="lg"
+                  variant={project.link ? "outline" : "default"}
+                >
+                  <a href={project.git} target="_blank" rel="noreferrer">
+                    <GithubIcon />
+                    View source
+                  </a>
+                </Button>
+              ) : null}
+              <Button asChild size="lg" variant="ghost" className="group">
+                <Link href="/#contact">
+                  Work with me
+                  <ArrowRight className="transition-transform duration-200 group-hover:translate-x-0.5" />
+                </Link>
               </Button>
             </div>
           </Reveal>
@@ -213,6 +252,9 @@ export function ProjectPageContent({ project, next }: Props) {
           </Reveal>
         </div>
 
+        {/* ---- Demonstration / Video Walkthrough ---- */}
+        <ProjectDemo project={project} />
+
         {/* ---- Gallery ---- */}
         {gallery.length > 0 ? (
           <Reveal
@@ -234,9 +276,34 @@ export function ProjectPageContent({ project, next }: Props) {
           </Reveal>
         ) : null}
 
+        {/* ---- Hire CTA ---- */}
+        <Reveal className="mt-20">
+          <div className="rounded-2xl border border-border bg-card p-7 text-center shadow-[var(--shadow-soft)] sm:p-9">
+            <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
+              Want something like this built?
+            </h2>
+            <p className="mx-auto mt-2.5 max-w-md text-sm leading-relaxed text-muted-foreground">
+              I&apos;m available for full-time, contract and freelance work.
+              Tell me what you&apos;re building and I&apos;ll come back within
+              a day.
+            </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Button asChild size="lg" className="group">
+                <Link href="/#contact">
+                  Get in touch
+                  <ArrowRight className="transition-transform duration-200 group-hover:translate-x-1" />
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <Link href="/projects">Browse more work</Link>
+              </Button>
+            </div>
+          </div>
+        </Reveal>
+
         {/* ---- Next project ---- */}
         {next && next.slug !== project.slug ? (
-          <Reveal className="mt-20">
+          <Reveal className="mt-16">
             <hr className="rule" />
             <Link
               href={`/project/${next.slug}`}

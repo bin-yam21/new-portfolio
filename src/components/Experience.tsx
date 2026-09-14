@@ -10,7 +10,7 @@ const Experience = () => {
     <section id="experience" className="scroll-mt-28 py-24 sm:py-32">
       <div className="shell">
         <SectionHeading
-          eyebrow="03 — Experience"
+          eyebrow="04 — Experience"
           title="Where I've been putting the hours."
         />
 

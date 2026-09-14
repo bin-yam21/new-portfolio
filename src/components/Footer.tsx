@@ -19,9 +19,22 @@ const Footer = () => {
           <div className="max-w-sm">
             <p className="text-lg font-semibold tracking-tight">{site.name}</p>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              {site.role} — building products that stay fast, legible and
+              {site.roleLong} — building products that stay fast, legible and
               maintainable long after launch.
             </p>
+            {site.available ? (
+              <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground">
+                <span className="size-1.5 rounded-full bg-success" />
+                Available for new work — {site.location} · {site.timezone}
+              </p>
+            ) : null}
+            <a
+              href={`mailto:${site.email}`}
+              className="group mt-4 flex items-center gap-2 text-sm font-medium underline-offset-4 hover:text-accent hover:underline"
+            >
+              <Mail className="size-4" />
+              {site.email}
+            </a>
           </div>
 
           <nav aria-label="Footer">
@@ -46,6 +59,15 @@ const Footer = () => {
                 >
                   All projects
                 </Link>
+              </li>
+              <li>
+                <a
+                  href={site.resume}
+                  download
+                  className="text-sm text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"
+                >
+                  Résumé (PDF)
+                </a>
               </li>
             </ul>
           </nav>

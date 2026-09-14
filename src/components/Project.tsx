@@ -3,7 +3,11 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
-import { featuredProjects, visibleProjects } from "../../_data/data";
+import {
+  featuredProjects,
+  visibleCompanyProjects,
+  visibleProjects,
+} from "../../_data/data";
 import ProjectCard from "./ProjectCard";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
@@ -11,6 +15,15 @@ import { Button } from "./ui/button";
 
 const Project = () => {
   const featured = featuredProjects;
+
+  // With everything featured, "All 4 projects" would point at the same four
+  // cards. Count the private case studies too, so the archive link always
+  // promises something the homepage isn't already showing.
+  const archiveCount = visibleProjects.length + visibleCompanyProjects.length;
+  const archiveLabel =
+    featured.length >= visibleProjects.length
+      ? "Full archive, including client work"
+      : `All ${archiveCount} projects`;
 
   return (
     <section id="work" className="scroll-mt-28 py-24 sm:py-32">
@@ -25,7 +38,7 @@ const Project = () => {
           <Reveal delay={0.15} className="hidden sm:block">
             <Button asChild variant="ghost" size="sm" className="group">
               <Link href="/projects">
-                All {visibleProjects.length} projects
+                {archiveLabel}
                 <ArrowRight className="transition-transform duration-200 group-hover:translate-x-1" />
               </Link>
             </Button>
@@ -48,7 +61,7 @@ const Project = () => {
         <Reveal delay={0.15} className="mt-12 flex justify-center sm:hidden">
           <Button asChild variant="outline" className="group w-full">
             <Link href="/projects">
-              View all {visibleProjects.length} projects
+              {archiveLabel}
               <ArrowRight className="transition-transform duration-200 group-hover:translate-x-1" />
             </Link>
           </Button>

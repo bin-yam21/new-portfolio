@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
-import { visibleProjects as projects } from "../../../_data/data";
+import {
+  visibleCompanyProjects as companyProjects,
+  visibleProjects as projects,
+} from "../../../_data/data";
+import CompanyWork from "@/components/CompanyWork";
 import ProjectCard from "@/components/ProjectCard";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
@@ -29,7 +33,7 @@ export default function AllProjects() {
 
         <SectionHeading
           className="mt-8"
-          eyebrow={`Archive — ${projects.length} projects`}
+          eyebrow={`Archive — ${projects.length + companyProjects.length} projects`}
           title="Everything I've shipped."
           description="Client work, product experiments and the odd late-night idea. Open any one for the problem, the approach and the stack."
         />
@@ -47,6 +51,9 @@ export default function AllProjects() {
           ))}
         </Reveal>
       </div>
+
+      {/* Private client/company work as sanitized case studies. */}
+      <CompanyWork />
     </div>
   );
 }

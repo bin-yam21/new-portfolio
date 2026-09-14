@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import Marquee from "react-fast-marquee";
 
 /**
@@ -27,7 +28,59 @@ const techStack: { name: string; src?: string }[] = [
   { name: "JavaScript", src: "/tech/javascript.svg" },
 ];
 
+/** Mirrors `prefers-reduced-motion`, which the marquee doesn't honour itself. */
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduced(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  return reduced;
+}
+
 const StackLoop = () => {
+  const reducedMotion = usePrefersReducedMotion();
+
+  // Static, scrollable row instead of an endless scroll for anyone who asked
+  // the OS to cut motion.
+  if (reducedMotion) {
+    return (
+      <ul className="mt-6 flex flex-wrap justify-center gap-3">
+        {techStack.map((tech) => (
+          <li
+            key={tech.name}
+            className="flex items-center gap-2.5 rounded-full border border-border bg-card/70 px-4 py-2.5"
+          >
+            {tech.src ? (
+              <Image
+                src={tech.src}
+                alt=""
+                width={20}
+                height={20}
+                className="size-5 object-contain"
+              />
+            ) : (
+              <span
+                aria-hidden
+                className="grid size-5 place-items-center rounded-[5px] bg-accent-soft font-mono text-[0.62rem] font-semibold text-accent"
+              >
+                {tech.name.slice(0, 2).toUpperCase()}
+              </span>
+            )}
+            <span className="text-sm font-medium text-muted-foreground">
+              {tech.name}
+            </span>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
   return (
     <div className="edge-fade mt-6">
       <Marquee speed={34} autoFill pauseOnHover gradient={false}>
